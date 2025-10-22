@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kalkulator Fisika</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    padding: 20px;
+    max-width: 480px;
+    margin: auto;
+  }
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    box-sizing: border-box;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+  }
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    border-radius: 4px;
+    border: 2px solid #3498db;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #2980b9;
+  }
+  #result {
+    margin-top: 20px;
+    padding: 12px;
+    background: #dff0d8;
+    border: 1px solid #3c763d;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #3c763d;
+  }
+</style>
+</head>
+<body>
+
+<h1>Kalkulator Fisika</h1>
+
+<label for="formula">Pilih Rumus:</label>
+<select id="formula">
+  <option value="velocity">Kecepatan (v = s / t)</option>
+  <option value="force">Gaya (F = m × a)</option>
+  <option value="kineticEnergy">Energi Kinetik (Ek = 0.5 × m × v²)</option>
+</select>
+
+<div id="inputs">
+
+  <!-- Input akan berubah sesuai rumus -->
+  
+</div>
+
+<button onclick="calculate()">Hitung</button>
+
+<div id="result"></div>
+
+<script>
+  const formulaSelect = document.getElementById('formula');
+  const inputsDiv = document.getElementById('inputs');
+  const resultDiv = document.getElementById('result');
+
+  function createInput(id, label) {
+    return `
+      <label for="${id}">${label}:</label>
+      <input type="number" id="${id}" required />
+    `;
+  }
+
+  function updateInputs() {
+    let html = '';
+    const formula = formulaSelect.value;
+
+    if (formula === 'velocity') {
+      html += createInput('distance', 'Jarak (s) dalam meter');
+      html += createInput('time', 'Waktu (t) dalam detik');
+    } else if (formula === 'force') {
+      html += createInput('mass', 'Massa (m) dalam kilogram');
+      html += createInput('acceleration', 'Percepatan (a) dalam m/s²');
+    } else if (formula === 'kineticEnergy') {
+      html += createInput('mass', 'Massa (m) dalam kilogram');
+      html += createInput('velocity', 'Kecepatan (v) dalam m/s');
+    }
+
+    inputsDiv.innerHTML = html;
+    resultDiv.innerHTML = '';
+  }
+
+  function calculate() {
+    const formula = formulaSelect.value;
+    let res;
+
+    if (formula === 'velocity') {
+      const s = parseFloat(document.getElementById('distance').value);
+      const t = parseFloat(document.getElementById('time').value);
+      if (isNaN(s) || isNaN(t) || t === 0) {
+        alert('Masukkan nilai yang valid, dan waktu tidak boleh nol!');
+        return;
+      }
+      res = s / t;
+      resultDiv.innerHTML = `Kecepatan (v) = ${res.toFixed(2)} m/s`;
+    } else if (formula === 'force') {
+      const m = parseFloat(document.getElementById('mass').value);
+      const a = parseFloat(document.getElementById('acceleration').value);
+      if (isNaN(m) || isNaN(a)) {
+        alert('Masukkan nilai yang valid!');
+        return;
+      }
+      res = m * a;
+      resultDiv.innerHTML = `Gaya (F) = ${res.toFixed(2)} Newton (N)`;
+    } else if (formula === 'kineticEnergy') {
+      const m = parseFloat(document.getElementById('mass').value);
+      const v = parseFloat(document.getElementById('velocity').value);
+      if (isNaN(m) || isNaN(v)) {
+        alert('Masukkan nilai yang valid!');
+        return;
+      }
+      res = 0.5 * m * v * v;
+      resultDiv.innerHTML = `Energi Kinetik (Ek) = ${res.toFixed(2)} Joule (J)`;
+    }
+  }
+
+  formulaSelect.addEventListener('change', updateInputs);
+
+  // Inisialisasi input saat halaman pertama dimuat
+  updateInputs();
+</script>
+
+</body>
+</html>
